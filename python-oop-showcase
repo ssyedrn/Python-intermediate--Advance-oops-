@@ -1,0 +1,248 @@
+1. Bank System (Sarcasm Edition)
+
+from abc import ABC, abstractmethod
+
+class Account(ABC):
+    def _init_(self, acc_no, owner, balance=0):
+        self.__acc_no = acc_no
+        self.owner = owner
+        self.__balance = balance
+
+    @property
+    def acc_no(self):
+        return self.__acc_no
+
+    @property
+    def balance(self):
+        return self.__balance
+
+    @balance.setter
+    def balance(self, amount):
+        if amount < 0:
+            raise ValueError("Balance cannot be negative. This isn’t fantasy banking.")
+        self.__balance = amount
+
+    @abstractmethod
+    def account_type(self):
+        pass
+
+    def deposit(self, amount):
+        self.__balance += amount
+        return f"{amount} deposited. Look at you pretending to be rich."
+
+    def withdraw(self, amount):
+        if amount > self.__balance:
+            return "You tried. But you're broke."
+        self.__balance -= amount
+        return f"Withdrawn {amount}. Remaining: {self.__balance}"
+
+class Savings(Account):
+    def account_type(self):
+        return "Savings"
+
+class Current(Account):
+    def account_type(self):
+        return "Current"
+
+class Customer:
+    bank_name = "Sarcastic Bank Ltd."
+
+    def _init_(self, name, acc_no, acc_type="savings"):
+        self.name = name
+        if acc_type == "savings":
+            self.account = Savings(acc_no, name)
+        else:
+            self.account = Current(acc_no, name)
+
+    @staticmethod
+    def validate_amount(amount):
+        return amount > 0
+
+    @classmethod
+    def update_bank(cls, new_name):
+        cls.bank_name = new_name
+        return f"Bank renamed to {new_name}"
+
+    def info(self):
+        return f"{self.name} | {self.account.acc_no} | {self.account.account_type()}"
+
+c = Customer("xyz", 101)
+print(c.info())
+print(c.account.deposit(500))
+print(c.account.withdraw(900))
+print(c.account.withdraw(100))
+print(Customer.update_bank("NotAScam Bank"))
+
+
+---
+
+2. Library Management (Sarcasm Edition)
+
+class Book:
+    def _init_(self, title, author):
+        self._title = title
+        self._author = author
+        self._available = True
+
+    @property
+    def available(self):
+        return self._available
+
+    @available.setter
+    def available(self, value):
+        self._available = value
+
+    def info(self):
+        return f"{self._title} by {self._author}"
+
+class Member:
+    def _init_(self, name):
+        self.name = name
+        self.books = []
+
+    def borrow(self, book: Book):
+        if not book.available:
+            return "Sorry, some other nerd took it."
+        book.available = False
+        self.books.append(book)
+        return f"{self.name} borrowed {book.info()}"
+
+    def return_book(self, book: Book):
+        if book not in self.books:
+            return "You can't return what you never took. Nice try."
+        book.available = True
+        self.books.remove(book)
+        return f"{self.name} returned {book.info()}"
+
+class Librarian:
+    @staticmethod
+    def welcome():
+        return "Welcome to the library. Try not to destroy books."
+
+b1 = Book("Book A", "Author X")
+m = Member("abc")
+print(m.borrow(b1))
+print(m.return_book(b1))
+print(Librarian.welcome())
+
+
+---
+
+3. Employee Payroll (Sarcasm Edition)
+
+class Employee:
+    def _init_(self, name, salary):
+        self._name = name
+        self._salary = salary
+
+    @property
+    def salary(self):
+        return self._salary
+
+    @salary.setter
+    def salary(self, value):
+        if value < 0:
+            raise ValueError("Salary can't be negative, unless you're working for exposure.")
+        self._salary = value
+
+    def info(self):
+        return f"{self._name} earns {self._salary}"
+
+class FullTime(Employee):
+    def calculate_bonus(self):
+        return self._salary * 0.1
+
+class PartTime(Employee):
+    def calculate_bonus(self):
+        return self._salary * 0.03
+
+class HR:
+    @staticmethod
+    def announce():
+        return "Payroll will be late again. Blame accounting."
+
+e1 = FullTime("abc", 50000)
+e2 = PartTime("xyz", 20000)
+print(e1.info(), "Bonus:", e1.calculate_bonus())
+print(e2.info(), "Bonus:", e2.calculate_bonus())
+print(HR.announce())
+
+
+---
+
+4. Game Character System (Sarcasm Edition)
+
+from abc import ABC, abstractmethod
+
+class Character(ABC):
+    def _init_(self, name, hp):
+        self._name = name
+        self._hp = hp
+
+    @abstractmethod
+    def attack(self):
+        pass
+
+    def info(self):
+        return f"{self._name} | HP: {self._hp}"
+
+class Warrior(Character):
+    def attack(self):
+        return f"{self._name} smashes with a sword like a gym addict."
+
+class Mage(Character):
+    def attack(self):
+        return f"{self._name} casts fireballs because touching things is overrated."
+
+class Arena:
+    @staticmethod
+    def welcome():
+        return "Welcome to the arena. Try not to die too fast."
+
+w = Warrior("Brute", 120)
+m = Mage("SparkleBoy", 80)
+print(w.info(), w.attack())
+print(m.info(), m.attack())
+print(Arena.welcome())
+
+
+---
+
+5. Food Delivery System (Sarcasm Edition)
+
+class FoodItem:
+    def _init_(self, name, price):
+        self._name = name
+        self._price = price
+
+    @property
+    def price(self):
+        return self._price
+
+    def info(self):
+        return f"{self._name} - {self._price}"
+
+class Order:
+    def _init_(self, customer):
+        self.customer = customer
+        self.items = []
+
+    def add_item(self, item: FoodItem):
+        self.items.append(item)
+        return f"{item.info()} added. Your wallet is crying."
+
+    def total(self):
+        return sum(i.price for i in self.items)
+
+class Restaurant:
+    @staticmethod
+    def greet():
+        return "Welcome. Please pretend we serve edible food."
+
+i1 = FoodItem("Burger", 120)
+i2 = FoodItem("Pizza", 250)
+o = Order("abc")
+print(o.add_item(i1))
+print(o.add_item(i2))
+print("Total:", o.total())
+print(Restaurant.greet())
